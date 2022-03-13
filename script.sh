@@ -54,7 +54,7 @@ read -r country
 if [[ -z $country ]]; then
    country="RU"
 fi
-echo "Key size(def - 1024):"
+echo "Key size(def - 2048):"
 read -r key_size
 if [[ $key_size =~ ^[0-9]+$ ]]; then #check: is key a number?
    echo "Key size:" "$key_size"
