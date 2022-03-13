@@ -181,11 +181,12 @@ persist-tun
 status /var/log/openvpn/openvpn-status.log
 log-append /var/log/openvpn/openvpn.log
 verb 4
-mute 20
-daemon
-mode server
-user nobody
-group nobody
+explicit-exit-notify 1
+#mute 20
+#daemon
+#mode server
+#user nobody
+#group nobody
 EOF
 echo "Добавим сервер в автозагрузку и запустим"
 chown -R openvpn:openvpn /var/log/openvpn
@@ -235,21 +236,21 @@ verb 3
 EOF
 #теперь функция создания клиентов
 create_client() {
-   cd /etc/openvpn/
+   cd /etc/openvpn/easy-rsa/
    /etc/openvpn/easy-rsa/easyrsa build-client-full "$client_name$client_count" nopass
    cp /home/openvpn/temp_conf_client.txt /home/openvpn/ready_conf/"$client_name$client_count"'.ovpn'
    {
       echo "<ca>"
-      cat "/etc/openvpn/pki/ca.crt"
+      cat "/etc/openvpn/keys/ca.crt"
       echo "</ca>"
       echo "<cert>"
-      awk '/BEGIN/,/END/' "/etc/openvpn/pki/issued/$client_name$client_count.crt"
+      awk '/BEGIN/,/END/' "/etc/openvpn/easy-rsa/pki/issued/$client_name$client_count.crt"
       echo "</cert>"
       echo "<key>"
-      cat "/etc/openvpn/pki/private/$client_name$client_count.key"
+      cat "/etc/openvpn/easy-rsa/pki/private/$client_name$client_count.key"
       echo "</key>"
       echo "<dh>"
-      cat "/etc/openvpn/pki/dh.pem"
+      cat "/etc/openvpn/keys/dh.pem"
       echo "</dh>"
       echo "<tls-auth>"
       cat "/etc/openvpn/keys/ta.key"
